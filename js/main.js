@@ -38,7 +38,7 @@
 		geometry.applyMatrix(new THREE.Matrix4().makeScale(-1, 1, 1));
 
 		video = document.createElement('video');
-		video.src = "R0010002_20160613154618_er.MP4";
+		video.src = "R0010004_20161101155836_er.MP4";
 		video.load();
 		video.play();
 		video.loop = true;
