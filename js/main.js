@@ -39,8 +39,8 @@
 
 		video = document.createElement('video');
 		video.src = "R0010004_20161101155836_er.MP4";
-		video.load();
-		video.play();
+		video.autoplay = true;
+		video.muted = true;
 		video.loop = true;
 
 		texture = new THREE.VideoTexture( video );  
@@ -143,16 +143,18 @@
 		//単一ファイルの想定
 		var file = e.dataTransfer.files[0];
 
-		if (!file.type.match('image.*')) {
-			alert('imageファイルにしてね');
+		if (!file.type.match('video.*')) {
+			alert('videoファイルを選択してください');
 			cancelEvent(e);
 		}
 
-		var img = document.createElement("img");
 		var fileReader = new FileReader();
 		fileReader.onload = function(e) {
-			img.src = e.target.result;
-			material.map = new THREE.Texture(img);
+			video.src = e.target.result;
+			video.autoplay = true;
+			video.muted = true;
+			video.loop = true;
+			material.map = new THREE.VideoTexture(video);
 			material.map.needsUpdate = true;
 		};
 		fileReader.readAsDataURL(file);
