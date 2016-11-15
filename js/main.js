@@ -143,18 +143,23 @@
 		//単一ファイルの想定
 		var file = e.dataTransfer.files[0];
 
-		if (!file.type.match('video.*')) {
-			alert('videoファイルを選択してください');
+		if (!file.type.match('video.*') && !file.type.match('image.*')) {
+			alert('imageファイルかvideoファイルを選択してください');
 			cancelEvent(e);
 		}
 
 		var fileReader = new FileReader();
 		fileReader.onload = function(e) {
-			video.src = e.target.result;
-			video.autoplay = true;
-			video.muted = true;
-			video.loop = true;
-			material.map = new THREE.VideoTexture(video);
+			if (file.type.match('video.*')) {
+				video.src = e.target.result;
+				video.autoplay = true;
+				video.muted = true;
+				video.loop = true;
+				material.map = new THREE.VideoTexture(video);
+			} else if (file.type.match('image.*')) {
+				img.src = e.target.result;
+				material.map = new THREE.Texture(img);
+			}
 			material.map.needsUpdate = true;
 		};
 		fileReader.readAsDataURL(file);
