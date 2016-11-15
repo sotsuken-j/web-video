@@ -65,6 +65,7 @@
 		}else{
 			controls = new THREE.OrbitControls(camera);
 			controls.enableZoom = false;
+			controls.enablePan = false;
 		}
 		
 		
