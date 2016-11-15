@@ -156,11 +156,12 @@
 				video.muted = true;
 				video.loop = true;
 				material.map = new THREE.VideoTexture(video);
+				material.map.needsUpdate = true;
 			} else if (file.type.match('image.*')) {
 				img.src = e.target.result;
 				material.map = new THREE.Texture(img);
+				material.map.needsUpdate = true;
 			}
-			material.map.needsUpdate = true;
 		};
 		fileReader.readAsDataURL(file);
 		//デフォルトのイベントキャンセルしないとブラウザでイメージが表示されてしまう
