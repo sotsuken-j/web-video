@@ -147,6 +147,8 @@
 			alert('imageファイルかvideoファイルを選択してください');
 			cancelEvent(e);
 		}
+		
+		var img = document.createElement("img");
 
 		var fileReader = new FileReader();
 		fileReader.onload = function(e) {
