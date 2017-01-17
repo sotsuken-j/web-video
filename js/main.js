@@ -1,9 +1,9 @@
 (function() {
 
 	var camera, scene, renderer, material;
-	//
+	
 	var controls, effect;
-	//
+	
 	
 	var fov = 70,
 		texture_placeholder,
@@ -57,8 +57,6 @@
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		container.appendChild(renderer.domElement);
-
-		//
 		
 		if( (navigator.userAgent.indexOf('Android') > 0) || (navigator.userAgent.indexOf('iPhone') > 0) ) {
 			controls = new THREE.DeviceOrientationControls(camera);
@@ -70,7 +68,6 @@
 		
 		
 		effect = new THREE.StereoEffect(renderer);
-		//
 
 		window.addEventListener('resize', onWindowResize, false);
 
@@ -93,8 +90,6 @@
 	}
 
 	function render() {
-		
-		//controls.update();
 
 		lat = Math.max(-85, Math.min(85, lat));
 		phi = THREE.Math.degToRad(90 - lat);
@@ -104,32 +99,11 @@
 		camera.target.y = 500 * Math.cos(phi);
 		camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
 
-		//camera.lookAt(camera.target);
-
-		/*
-				// distortion
-				camera.position.x = - camera.target.x;
-				camera.position.y = - camera.target.y;
-				camera.position.z = - camera.target.z;
-				*/
 		if( (navigator.userAgent.indexOf('Android') > 0) || (navigator.userAgent.indexOf('iPhone') > 0) ) {
 			controls.update();
 		}
-		//renderer.render(scene, camera);
 		effect.render(scene, camera);
 	}
-	
-	/*function fullscreen() {
-		if (container.requestFullscreen) {
-			container.requestFullscreen();
-		} else if (container.msRequestFullscreen) {
-			container.msRequestFullscreen();
-		} else if (container.mozRequestFullScreen) {
-			container.mozRequestFullScreen();
-		} else if (container.webkitRequestFullscreen) {
-			container.webkitRequestFullscreen();
-		}
-	}*/
 
 	/**
 	 *画像Drag＆Drop処理
@@ -176,4 +150,35 @@
 	droppable.addEventListener('dragover', cancelEvent);
 	droppable.addEventListener('drop', handllerDroppedFile);
 	
+	function handleFileSelect(e) {
+		var file = e.target.files[0];
+		
+		if (!file.type.match('video.*') && !file.type.match('image.*')) {
+			alert('imageファイルかvideoファイルを選択してください');
+			cancelEvent(e);
+		}
+		
+		var img = document.createElement("img");
+
+		var fileReader = new FileReader();
+		fileReader.onload = function(e) {
+			if (file.type.match('video.*')) {
+				video.src = e.target.result;
+				video.autoplay = true;
+				video.muted = true;
+				video.loop = true;
+				material.map = new THREE.VideoTexture(video);
+				material.map.needsUpdate = true;
+			} else if (file.type.match('image.*')) {
+				img.src = e.target.result;
+				material.map = new THREE.Texture(img);
+				material.map.needsUpdate = true;
+			}
+		};
+		fileReader.readAsDataURL(file);
+		//デフォルトのイベントキャンセルしないとブラウザでイメージが表示されてしまう
+		cancelEvent(e);
+	}
+	var select = document.getElementById("selfile");
+	select.addEventListener('change', handleFileSelect);
 })();
